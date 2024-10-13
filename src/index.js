@@ -9,6 +9,7 @@ import { copyAFile } from "./copymove.js";
 import { removeAFile } from "./remove.js";
 import { displayOSInfo } from "./osinfo.js";
 import { calculateHash } from "./hash.js";
+import { compress, decompress } from "./compress.js";
 
 const args = process.argv.slice(2);
 let username = "";
@@ -50,52 +51,45 @@ const startApp = async () => {
         process.exit();
       } else if (command === "up") {
         changeDir("up");
-        printCurrentDir();
       } else if (command.startsWith("cd ")) {
         const pathToDirectory = command.slice(3).trim();
         changeDir(pathToDirectory);
-        printCurrentDir();
       } else if (command === "ls") {
         await list();
-        printCurrentDir();
       } else if (command.startsWith("cat ")) {
         const path_to_file = command.slice(4).trim();
         await readAFile(path_to_file);
-        printCurrentDir();
       } else if (command.startsWith("add ")) {
         const new_file_name = command.slice(4).trim();
         await createFile(new_file_name);
-        printCurrentDir();
       } else if (command.startsWith("rn ")) {
         const [, path_to_file, new_file_name] = command.split(" ");
         await renameFile(path_to_file, new_file_name);
-        printCurrentDir();
       } else if (command.startsWith("cp ")) {
         const [, path_to_file, path_to_new_directory] = command.split(" ");
         await copyAFile(path_to_file, path_to_new_directory, false);
-        printCurrentDir();
       } else if (command.startsWith("mv ")) {
         const [, path_to_file, path_to_new_directory] = command.split(" ");
         await copyAFile(path_to_file, path_to_new_directory, true);
-        printCurrentDir();
       } else if (command.startsWith("rm ")) {
         const path_to_file = command.slice(3).trim();
         await removeAFile(path_to_file);
-        printCurrentDir();
       } else if (command.startsWith("os ")) {
         const option = command.slice(3).trim();
         displayOSInfo(option);
-        printCurrentDir();
-      }
-       else if (command.startsWith("hash ")) {
+      } else if (command.startsWith("hash ")) {
         const path_to_file = command.slice(5).trim();
         calculateHash(path_to_file);
-        printCurrentDir();
-        
-      }
-       else {
+      } else if (command.startsWith("compress ")) {
+        const [, path_to_file, path_to_new_directory] = command.split(" ");
+        await compress(path_to_file, path_to_new_directory);
+      } else if (command.startsWith("decompress ")) {
+        const [, path_to_file, path_to_new_directory] = command.split(" ");
+        await decompress(path_to_file, path_to_new_directory);
+      } else {
         stdout.write("invalid input \n");
       }
+      printCurrentDir();
       rl.prompt();
     });
   } catch (error) {
