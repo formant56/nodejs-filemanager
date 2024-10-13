@@ -5,6 +5,8 @@ import { list } from "./list.js";
 import { readAFile } from "./read.js";
 import { createFile } from "./create.js";
 import { renameFile } from "./rename.js";
+import { copyAFile } from "./copymove.js";
+import { removeAFile } from "./remove.js";
 
 const args = process.argv.slice(2);
 let username = "";
@@ -66,6 +68,19 @@ const startApp = async () => {
         const [, path_to_file, new_file_name] = command.split(" ");
         await renameFile(path_to_file, new_file_name);
         printCurrentDir();
+      } else if (command.startsWith("cp ")) {
+        const [, path_to_file, path_to_new_directory] = command.split(" ");
+        await copyAFile(path_to_file, path_to_new_directory, false);
+        printCurrentDir();
+      } else if (command.startsWith("mv ")) {
+        const [, path_to_file, path_to_new_directory] = command.split(" ");
+        await copyAFile(path_to_file, path_to_new_directory, true);
+        printCurrentDir();
+      } else if (command.startsWith("rm ")) {
+        const path_to_file = command.slice(3).trim();
+        await removeAFile(path_to_file);
+        printCurrentDir();
+        
       } else {
         stdout.write("invalid input \n");
       }
