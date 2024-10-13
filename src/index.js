@@ -8,6 +8,7 @@ import { renameFile } from "./rename.js";
 import { copyAFile } from "./copymove.js";
 import { removeAFile } from "./remove.js";
 import { displayOSInfo } from "./osinfo.js";
+import { calculateHash } from "./hash.js";
 
 const args = process.argv.slice(2);
 let username = "";
@@ -85,8 +86,14 @@ const startApp = async () => {
         const option = command.slice(3).trim();
         displayOSInfo(option);
         printCurrentDir();
+      }
+       else if (command.startsWith("hash ")) {
+        const path_to_file = command.slice(5).trim();
+        calculateHash(path_to_file);
+        printCurrentDir();
         
-      } else {
+      }
+       else {
         stdout.write("invalid input \n");
       }
       rl.prompt();
