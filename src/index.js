@@ -7,6 +7,7 @@ import { createFile } from "./create.js";
 import { renameFile } from "./rename.js";
 import { copyAFile } from "./copymove.js";
 import { removeAFile } from "./remove.js";
+import { displayOSInfo } from "./osinfo.js";
 
 const args = process.argv.slice(2);
 let username = "";
@@ -79,6 +80,10 @@ const startApp = async () => {
       } else if (command.startsWith("rm ")) {
         const path_to_file = command.slice(3).trim();
         await removeAFile(path_to_file);
+        printCurrentDir();
+      } else if (command.startsWith("os ")) {
+        const option = command.slice(3).trim();
+        displayOSInfo(option);
         printCurrentDir();
         
       } else {
